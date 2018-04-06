@@ -33,14 +33,7 @@ import com.sun.btrace.runtime.BTraceProbePersisted;
 import javax.annotation.processing.Processor;
 import com.sun.source.util.JavacTask;
 import com.sun.btrace.util.Messages;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,6 +64,7 @@ public class Compiler {
     // null means no preprocessing isf done.
     public List<String> includeDirs;
     private boolean generatePack = false;
+    private String packExtension = "class";
 
     public Compiler(String includePath, boolean generatePack) {
         if (includePath != null) {
@@ -116,6 +110,7 @@ public class Compiler {
         String includePath = null;
         boolean trusted = false;
         boolean generatePack = true;
+        String packExtension = null;
         int count = 0;
         boolean classPathDefined = false;
         boolean outputDirDefined = false;
@@ -142,6 +137,8 @@ public class Compiler {
                     trustedDefined = true;
                 } else if (args[count].equals("-nopack")) {
                     generatePack = false;
+                } else if (args[count].equals("-packext")) {
+                    packExtension = args[++count];
                 } else {
                     usage();
                 }
@@ -156,6 +153,10 @@ public class Compiler {
 
         if (args.length <= count) {
             usage();
+        }
+
+        if (!generatePack && packExtension != null) {
+            usage("Can not specify pack extension if not using packs (-nopack)");
         }
 
         File[] files = new File[args.length - count];
@@ -186,7 +187,7 @@ public class Compiler {
                 } else {
                     file = name;
                 }
-                file += ".class";
+                file += "." + (packExtension != null ? packExtension : "class");
                 File out = new File(dir, file);
                 try (FileOutputStream fos = new FileOutputStream(out)) {
                     fos.write(c.getValue());
@@ -308,13 +309,13 @@ public class Compiler {
                         SharedSettings.GLOBAL.setTrusted(true);
 
                         BTraceProbeNode bpn = (BTraceProbeNode)new BTraceProbeFactory(SharedSettings.GLOBAL).createProbe(classData);
-                        ByteOutputStream bos = new ByteOutputStream();
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         try (DataOutputStream dos = new DataOutputStream(bos)) {
                             BTraceProbePersisted bpp = BTraceProbePersisted.from(bpn);
                             bpp.write(dos);
                         }
 
-                        classData = bos.getBytes();
+                        classData = bos.toByteArray();
                     }
                     result.put(name, classData);
                 }
