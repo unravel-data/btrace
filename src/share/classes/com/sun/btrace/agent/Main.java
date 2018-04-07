@@ -153,6 +153,8 @@ public final class Main {
     }
 
     private static void loadDefaultArguments(String config) {
+        config = config != null ? config : "";
+        
         try {
             String propTarget = Constants.EMBEDDED_BTRACE_SECTION_HEADER + "agent.properties";
             InputStream is = ClassLoader.getSystemResourceAsStream(propTarget);
@@ -168,7 +170,7 @@ public final class Main {
                         keyConfig = argKey.substring(0, configPos);
                         argKey = argKey.substring(configPos + 1);
                     }
-                    if (config == null || keyConfig.isEmpty() || config.equals(keyConfig)) {
+                    if (keyConfig.isEmpty() || config.equals(keyConfig)) {
                         String argVal = (String) entry.getValue();
                         switch (argKey) {
                             case "script": {
