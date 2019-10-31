@@ -62,7 +62,7 @@ public final class ClassCache {
         return get(cl, new ClassName(className));
     }
 
-    ClassInfo get(ClassLoader cl, ClassName className) {
+    synchronized ClassInfo get(ClassLoader cl, ClassName className) {
         Map<ClassName, ClassInfo> infos = getInfos(cl);
 
         ClassInfo ci = infos.get(className);

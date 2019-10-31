@@ -77,6 +77,8 @@ public class ClassFilter {
         SENSITIVE_CLASSES.add("java/lang/invoke/");
         SENSITIVE_CLASSES.add("java/lang/ref/");
         SENSITIVE_CLASSES.add("java/lang/concurrent/");
+        SENSITIVE_CLASSES.add("javax/security/");
+        SENSITIVE_CLASSES.add("javax/crypto/");
         SENSITIVE_CLASSES.add("sun/reflect");
         SENSITIVE_CLASSES.add("sun/misc/Unsafe");
         SENSITIVE_CLASSES.add("sun/security/");
