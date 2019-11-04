@@ -30,7 +30,7 @@ node {
 
     try {
             stage("Build") {
-                        sh "./gradlew build"
+                        sh "./gradlew build ; ./gradlew buildDistributions ; ./gradlew publish"
                 }
     } catch (any) {
         currentBuild.result = 'FAILURE'
