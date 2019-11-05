@@ -30,8 +30,13 @@ node {
 
     try {
             stage("Build") {
-                        sh "./gradlew build ; ./gradlew buildDistributions ; ./gradlew publish"
-                }
+                        sh "./gradlew build ; ./gradlew buildDistributions"
+            }
+            stage("Publish") {
+               withCredentials([usernamePassword(credentialsId: 'artifactory', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                 sh './gradlew publish -PmavenUser=$USERNAME -PmavenPassword=$PASSWORD'
+               }
+            }
     } catch (any) {
         currentBuild.result = 'FAILURE'
         throw any // rethrow exception
