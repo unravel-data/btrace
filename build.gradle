@@ -480,18 +480,11 @@ publishing {
         }
     }
 
-    /* ---- configure the repository URL . . .
     repositories {
-    maven {
-    if (version endsWith('-SNAPSHOT') {
-    url 'https://oss.sonatype.org/content/repositories/snapshots'
-    } else {
-    // signing is missing!
-    url 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+        maven {
+            url("http://172.36.1.200:8081/artifactory/libs-release")
+        }
     }
-    }
-    }
-     */
 }
 
 jacocoTestReport {
