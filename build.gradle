@@ -485,7 +485,7 @@ publishing {
             credentials {
               username "$mavenUser"
               password "$mavenPassword"
-            }
+            }
             url("http://172.36.1.200:8081/artifactory/libs-release")
         }
     }
